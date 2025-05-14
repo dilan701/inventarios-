@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Inventario Completo</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #45a049;
+            --danger-color: #f44336;
+            --warning-color: #ff9800;
+            --info-color: #2196F3;
+            --light-color: #f5f5f5;
+            --dark-color: #333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+        }
+        
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        
+        .menu button {
+            padding: 12px 18px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 180px;
+        }
+        
+        .menu button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        button[type="submit"], 
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        
+        button[type="submit"]:hover, 
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary {
+            background-color: var(--info-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #0b7dda;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+        
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border-left: 5px solid #3c763d;
+        }
+        
+        .alert-info {
+            background-color: #d9edf7;
+            color: #31708f;
+            border-left: 5px solid #31708f;
+        }
+        
+        .alert-warning {
+            background-color: #fcf8e3;
+            color: #8a6d3b;
+            border-left: 5px solid #8a6d3b;
+        }
+        
+        .alert-danger {
+            background-color: #f2dede;
+            color: #a94442;
+            border-left: 5px solid #a94442;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+        }
+        
+        .search-container input {
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .multi-add-options {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .menu {
+                flex-direction: column;
+            }
+            
+            .menu button {
+                width: 100%;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏭 Sistema de Gestión de Inventario</h1>
+        
+        <div class="menu">
+            <button onclick="mostrarSeccion('ver-inventario')">📋 Ver Inventario</button>
+            <button onclick="mostrarSeccion('agregar-producto')">➕ Agregar Producto</button>
+            <button onclick="mostrarSeccion('editar-producto')">✏️ Editar Producto</button>
+            <button onclick="mostrarSeccion('eliminar-producto')">🗑️ Eliminar Producto</button>
+            <button onclick="mostrarProductosFaltantes()">⚠️ Productos Faltantes</button>
+            <button onclick="mostrarProductosAgotarse()">🔔 Por Agotarse</button>
+            <button onclick="mostrarRecomendaciones()">💡 Recomendaciones</button>
+            <button onclick="mostrarSeccion('buscar-producto')">🔍 Buscar Producto</button>
+            <button onclick="mostrarSeccion('caducados-proximos')">📅 Próximos a Caducar</button>
+        </div>
+        
+        <!-- Sección Ver Inventario -->
+        <div id="ver-inventario" class="hidden">
+            <div class="card">
+                <h2>📋 Inventario Completo</h2>
+                <div class="search-container">
+                    <input type="text" id="buscar-inventario" placeholder="Buscar producto..." oninput="filtrarInventario()">
+                </div>
+                <div id="inventario-container"></div>
+            </div>
+        </div>
+        
+        <!-- Sección Agregar Producto -->
+        <div id="agregar-producto" class="hidden">
+            <div class="card">
+                <h2>➕ Agregar Nuevo Producto</h2>
+                <form id="form-agregar-producto">
+                    <div class="form-group">
+                        <label for="nombre">Nombre del Producto:</label>
+                        <input type="text" id="nombre" required placeholder="Ej: Detergente Líquido">
+                    </div>
+                    <div class="form-group">
+                        <label for="categoria">Categoría:</label>
+                        <select id="categoria" required>
+                            <option value="">Seleccione una categoría</option>
+                            <option value="Productos de limpieza">Productos de limpieza</option>
+                            <option value="Abarrotes">Abarrotes</option>
+                            <option value="Bebidas">Bebidas</option>
+                            <option value="Alimentos perecederos">Alimentos perecederos</option>
+                            <option value="Electrónicos">Electrónicos</option>
+                            <option value="Oficina">Oficina</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cantidad">Cantidad en Stock:</label>
+                        <input type="number" id="cantidad" min="0" required placeholder="Ej: 50">
+                    </div>
+                    <div class="form-group">
+                        <label for="ubicacion">Ubicación en Almacén:</label>
+                        <input type="text" id="ubicacion" required placeholder="Ej: Estante 3, Sección B">
+                    </div>
+                    <div class="form-group">
+                        <label for="stock-minimo">Stock Mínimo Requerido:</label>
+                        <input type="number" id="stock-minimo" min="0" required placeholder="Ej: 10">
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha-caducidad">Fecha de Caducidad (opcional):</label>
+                        <input type="date" id="fecha-caducidad">
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción (opcional):</label>
+                        <textarea id="descripcion" rows="3" placeholder="Descripción detallada del producto"></textarea>
+                    </div>
+                    <button type="submit">Agregar Producto</button>
+                </form>
+                
+                <!-- Opciones para agregar múltiples productos -->
+                <div class="multi-add-options" id="opciones-multiples" style="display: none;">
+                    <h3>¿Desea agregar otro producto?</h3>
+                    <div class="action-buttons">
+                        <button class="btn-secondary" onclick="continuarAgregando()">Sí, agregar otro</button>
+                        <button class="btn-primary" onclick="finalizarAgregado()">No, volver al inventario</button>
+                    </div>
+                </div>
+                
+                <div id="agregar-resultado" class="alert hidden"></div>
+            </div>
+        </div>
+        
+        <!-- Otras secciones (editar, eliminar, etc.) se mantienen igual -->
+        <!-- ... (resto del código permanece igual) ... -->
+        
+    </div>
+
+    <script>
+        // Base de datos simulada en localStorage
+        const DATABASE_KEY = 'inventario_db';
+        
+        // Inicializar la base de datos si no existe
+        function initDB() {
+            if (!localStorage.getItem(DATABASE_KEY)) {
+                const productos = {
+                    productos: [
+                        // Productos de limpieza
+                        {id: 1, nombre: "Detergente Líquido", categoria: "Productos de limpieza", cantidad: 10, ubicacion: "Estante 1", stock_minimo: 3, fecha_caducidad: obtenerFechaFutura(90), descripcion: "Detergente para ropa de 5L"},
+                        {id: 2, nombre: "Jabón para platos", categoria: "Productos de limpieza", cantidad: 10, ubicacion: "Estante 1", stock_minimo: 3, fecha_caducidad: obtenerFechaFutura(120), descripcion: "Jabón líquido para lavar platos"},
+                        // ... (resto de los productos de ejemplo)
+                    ]
+                };
+                localStorage.setItem(DATABASE_KEY, JSON.stringify(productos));
+            }
+        }
+        
+        // Función para continuar agregando productos
+        function continuarAgregando() {
+            document.getElementById('form-agregar-producto').reset();
+            document.getElementById('opciones-multiples').style.display = 'none';
+            document.getElementById('agregar-resultado').classList.add('hidden');
+            document.getElementById('nombre').focus();
+        }
+        
+        // Función para finalizar el proceso de agregado
+        function finalizarAgregado() {
+            document.getElementById('form-agregar-producto').reset();
+            document.getElementById('opciones-multiples').style.display = 'none';
+            mostrarSeccion('ver-inventario');
+        }
+        
+        // Modificación del evento submit para el formulario de agregar producto
+        document.addEventListener('DOMContentLoaded', function() {
+            // Formulario agregar producto
+            const formAgregar = document.getElementById('form-agregar-producto');
+            if (formAgregar) {
+                formAgregar.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const nombre = document.getElementById('nombre')?.value;
+                    const categoria = document.getElementById('categoria')?.value;
+                    const cantidad = document.getElementById('cantidad')?.value;
+                    const ubicacion = document.getElementById('ubicacion')?.value;
+                    const stockMinimo = document.getElementById('stock-minimo')?.value;
+                    const fechaCaducidad = document.getElementById('fecha-caducidad')?.value || null;
+                    const descripcion = document.getElementById('descripcion')?.value || '';
+                    
+                    if (!nombre || !categoria || !cantidad || !ubicacion || !stockMinimo) {
+                        mostrarAlerta(document.getElementById('agregar-resultado'), 'Por favor, complete todos los campos requeridos.', 'danger');
+                        return;
+                    }
+                    
+                    const producto = agregarProducto(nombre, categoria, cantidad, ubicacion, stockMinimo, fechaCaducidad, descripcion);
+                    
+                    mostrarAlerta(document.getElementById('agregar-resultado'), `Producto "${producto.nombre}" agregado con éxito. ID: ${producto.id}`, 'success');
+                    
+                    // Mostrar opciones para agregar múltiples productos
+                    document.getElementById('opciones-multiples').style.display = 'block';
+                });
+            }
+            
+            // Inicializar la aplicación
+            initDB();
+            mostrarSeccion('ver-inventario');
+        });
+
+        // ... (resto de las funciones permanece igual) ...
+    </script>
+</body>
+</html>
